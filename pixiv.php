@@ -31,19 +31,27 @@ $url = str_ireplace('c/240x480/img-master','img-original',$image[0][$i]);
 $url = str_ireplace('_master1200','',$url);
 $image[1][$i] = str_ireplace('_p0_master1200.jpg','',$image[1][$i]);
 //img data output
-$f = curl_get($url, array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2868.3 Safari/537.36','Referer: http://www.pixiv.net/member_illust.php?mode=medium&illust_id='.$image[1][$i]));
+$ua = "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2868.3 Safari/537.36"
+$f = curl_get($url, array($ua,'Referer: http://www.pixiv.net/member_illust.php?mode=medium&illust_id='.$image[1][$i]));
 //try to use PNG
-if ( preg_match("/404/i", $f ) ) {
+if ( preg_match("/40/i", $f ) ) {
 $url = str_ireplace('jpg','png',$url);
-$f = curl_get($url, array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2868.3 Safari/537.36','Referer: http://www.pixiv.net/member_illust.php?mode=medium&illust_id='.$image[1][$i]));
+$f = curl_get($url, array($ua,'Referer: http://www.pixiv.net/member_illust.php?mode=medium&illust_id='.$image[1][$i]));
 }
-//try small picture instead if error
-if ( preg_match("/404/i", $f ) ) {
+//try small picture instead of error
+if ( preg_match("/40/i", $f ) ) {
 $url = str_ireplace('240x480','1200x1200',$image[0][$i]);
-$f = curl_get($url, array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2868.3 Safari/537.36','Referer: http://www.pixiv.net/member_illust.php?mode=medium&illust_id='.$image[1][$i]));
+$f = curl_get($url, array($ua,'Referer: http://www.pixiv.net/member_illust.php?mode=medium&illust_id='.$image[1][$i]));
 }
-if ( preg_match("/404/i", $f ) ) {
+if ( preg_match("/40/i", $f ) ) {
 $url = str_ireplace('240x480','600x600',$image[0][$i]);
-$f = curl_get($url, array('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2868.3 Safari/537.36','Referer: http://www.pixiv.net/member_illust.php?mode=medium&illust_id='.$image[1][$i]));
+$f = curl_get($url, array($ua,'Referer: http://www.pixiv.net/member_illust.php?mode=medium&illust_id='.$image[1][$i]));
+}
+if ( preg_match("/40/i", $f ) ) {
+$f = curl_get($image[0][$i], array($ua,'Referer: http://www.pixiv.net/member_illust.php?mode=medium&illust_id='.$image[1][$i]));
+}
+//ConoHa BG
+if ( preg_match("/40/i", $f ) ) {
+$f = curl_get('https://manage.conoha.jp/Content/Images/ConoHa/ConoHaMode/bg_conoha.jpg');
 }
 echo $f;
